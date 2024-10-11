@@ -5,11 +5,15 @@ project "Core"
    targetdir "Binaries/%{cfg.buildcfg}"
    staticruntime "off"
 
-   files { "Source/**.h", "Source/**.cpp" }
+   files { "Source/**.h", "Source/**.cpp", "../ThirdParty/SQLite/sqlite3.c" }
 
    includedirs
    {
-      "Source"
+      "Source",
+      "../ThirdParty/sqlite",
+      "../ThirdParty/ImGUI",
+      "../ThirdParty/ImGUI/backends",
+      "../ThirdParty/ImGUI/examples/libs/glfw/include/GLFW"
    }
 
    targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")

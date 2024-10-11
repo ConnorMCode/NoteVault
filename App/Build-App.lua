@@ -5,19 +5,31 @@ project "App"
    targetdir "Binaries/%{cfg.buildcfg}"
    staticruntime "off"
 
-   files { "Source/**.h", "Source/**.cpp" }
+   files { "Source/**.h", "Source/**.cpp",  "../ThirdParty/ImGUI/backends/imgui_impl_glfw.cpp", "../ThirdParty/ImGUI/backends/imgui_impl_opengl3.cpp"}
 
    includedirs
    {
       "Source",
 
 	  -- Include Core
-	  "../Core/Source"
+	  "../Core/Source",
+
+      "../ThirdParty/sqlite",
+      "../ThirdParty/ImGUI",
+      "../ThirdParty/ImGUI/backends",
+      "../ThirdParty/ImGUI/examples/libs/glfw/include/GLFW"
+   }
+
+   libdirs
+   {
+      "../ThirdParty/ImGUI/examples/libs/glfw/lib-vc2010-64"
    }
 
    links
    {
-      "Core"
+      "Core",
+      "GLFW",
+      "opengl32.lib"
    }
 
    targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")

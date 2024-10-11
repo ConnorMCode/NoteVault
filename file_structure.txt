@@ -1,0 +1,126 @@
+Folder PATH listing
+Volume serial number is 7652-A2ED
+C:.
+³   .gitignore
+³   Build.lua
+³   file_structure.txt
+³   NoteVault.sln
+³   README.md
+³   UNLICENSE.txt
+³   
+ÃÄÄÄApp
+³   ³   App.vcxproj
+³   ³   App.vcxproj.user
+³   ³   Build-App.lua
+³   ³   
+³   ÀÄÄÄSource
+³           Main.cpp
+³           
+ÃÄÄÄBinaries
+³   ÃÄÄÄIntermediates
+³   ³   ÀÄÄÄwindows-x86_64
+³   ³       ÀÄÄÄDebug
+³   ³           ÃÄÄÄApp
+³   ³           ³   ³   App.exe.recipe
+³   ³           ³   ³   App.ilk
+³   ³           ³   ³   App.log
+³   ³           ³   ³   App.obj
+³   ³           ³   ³   vc143.idb
+³   ³           ³   ³   vc143.pdb
+³   ³           ³   ³   
+³   ³           ³   ÀÄÄÄApp.tlog
+³   ³           ³           App.lastbuildstate
+³   ³           ³           CL.command.1.tlog
+³   ³           ³           Cl.items.tlog
+³   ³           ³           link.command.1.tlog
+³   ³           ³           link.read.1.tlog
+³   ³           ³           link.secondary.1.tlog
+³   ³           ³           link.write.1.tlog
+³   ³           ³           unsuccessfulbuild
+³   ³           ³           
+³   ³           ÀÄÄÄCore
+³   ³               ³   Core.lib.recipe
+³   ³               ³   Core.log
+³   ³               ³   Core.obj
+³   ³               ³   Database.obj
+³   ³               ³   MetaData.obj
+³   ³               ³   Note.obj
+³   ³               ³   NoteManager.obj
+³   ³               ³   sqlite3.obj
+³   ³               ³   
+³   ³               ÀÄÄÄCore.tlog
+³   ³                       CL.command.1.tlog
+³   ³                       Cl.items.tlog
+³   ³                       CL.read.1.tlog
+³   ³                       CL.write.1.tlog
+³   ³                       Core.lastbuildstate
+³   ³                       Lib-link.read.1.tlog
+³   ³                       Lib-link.write.1.tlog
+³   ³                       Lib.command.1.tlog
+³   ³                       
+³   ÀÄÄÄwindows-x86_64
+³       ÀÄÄÄDebug
+³           ÃÄÄÄApp
+³           ³   ³   App.exe
+³           ³   ³   App.pdb
+³           ³   ³   notes.txt
+³           ³   ³   
+³           ³   ÀÄÄÄ.vs
+³           ³       ³   ProjectSettings.json
+³           ³       ³   slnx.sqlite
+³           ³       ³   VSWorkspaceState.json
+³           ³       ³   
+³           ³       ÀÄÄÄApp
+³           ³           ÃÄÄÄFileContentIndex
+³           ³           ³       33e7e1d1-55cf-44b3-b18c-e1f76a2ec87b.vsidx
+³           ³           ³       
+³           ³           ÀÄÄÄv17
+³           ³                   DocumentLayout.json
+³           ³                   
+³           ÀÄÄÄCore
+³                   Core.idb
+³                   Core.lib
+³                   Core.pdb
+³                   
+ÃÄÄÄCore
+³   ³   Build-Core.lua
+³   ³   Core.vcxproj
+³   ³   Core.vcxproj.filters
+³   ³   Core.vcxproj.user
+³   ³   
+³   ÀÄÄÄSource
+³       ÀÄÄÄCore
+³               Database.cpp
+³               Database.h
+³               MetaData.cpp
+³               MetaData.h
+³               Note.cpp
+³               Note.h
+³               NoteManager.cpp
+³               NoteManager.h
+³               
+ÃÄÄÄScripts
+³       Setup-Linux.sh
+³       Setup-Windows.bat
+³       
+ÃÄÄÄThirdParty
+³   ÀÄÄÄsqlite
+³           shell.c
+³           sqlite3.c
+³           sqlite3.h
+³           sqlite3ext.h
+³           
+ÀÄÄÄVendor
+    ÀÄÄÄBinaries
+        ÀÄÄÄPremake
+            ³   LICENSE.txt
+            ³   
+            ÃÄÄÄLinux
+            ³       premake5
+            ³       
+            ÃÄÄÄmacOS
+            ³       premake5
+            ³       
+            ÀÄÄÄWindows
+                    premake5.exe
+                    
