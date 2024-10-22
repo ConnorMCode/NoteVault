@@ -165,4 +165,58 @@ namespace Core {
         return true;
     }
 
+    std::optional<Note> Database::getNoteByTitle(const std::string& title) {
+        std::string sql = "SELECT ID, Title, Content, CreationDate FROM Notes WHERE Title = ?;";
+        sqlite3_stmt* stmt;
+
+        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+            std::cerr << "Error preparing statement to retrieve note by title: " << sqlite3_errmsg(db) << std::endl;
+            return std::nullopt;
+        }
+
+        sqlite3_bind_text(stmt, 1, title.c_str(), -1, SQLITE_STATIC);
+
+        if (sqlite3_step(stmt) == SQLITE_ROW) {
+            int id = sqlite3_column_int(stmt, 0);
+            std::string noteTitle = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+            std::string content = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+            std::string creationDate = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+
+            sqlite3_finalize(stmt);
+            return Note{ noteTitle, content, {}, creationDate };
+        }
+        else {
+            std::cerr << "Note not found with title: " << title << std::endl;
+        }
+
+        sqlite3_finalize(stmt);
+        return std::nullopt;
+    }
+
+    std::optional<Note> Database::getRandomNote() {
+        std::string sql = "SELECT ID, Title, Content, CreationDate FROM Notes ORDER BY RANDOM() LIMIT 1;";
+        sqlite3_stmt* stmt;
+
+        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+            std::cerr << "Error preparing statement to retrieve random note: " << sqlite3_errmsg(db) << std::endl;
+            return std::nullopt;
+        }
+
+        if (sqlite3_step(stmt) == SQLITE_ROW) {
+            int id = sqlite3_column_int(stmt, 0);
+            std::string title = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+            std::string content = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+            std::string creationDate = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+
+            sqlite3_finalize(stmt);
+            return Note{ title, content, {}, creationDate };
+        }
+        else {
+            std::cerr << "No note found in the database." << std::endl;
+        }
+
+        sqlite3_finalize(stmt);
+        return std::nullopt;
+    }
+
 }

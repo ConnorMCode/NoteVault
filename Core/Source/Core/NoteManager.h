@@ -2,6 +2,7 @@
 #include "Database.h"
 #include "Note.h"
 #include <string>
+#include <optional>
 
 namespace Core {
 
@@ -12,6 +13,10 @@ namespace Core {
 
         // Add a note directly to the database
         void addNote(const Note& note);
+
+        std::optional<Note> getNoteByTitle(const std::string& title);
+
+        std::optional<Note> getRandomNote();
 
     private:
         Database database; // Database object to interact with the SQLite database

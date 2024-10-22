@@ -2,6 +2,8 @@
 #include "sqlite3.h"
 #include <string>
 #include <vector>
+#include <optional>
+#include "Note.h"
 
 namespace Core {
 	class Database {
@@ -11,6 +13,10 @@ namespace Core {
 
 		bool createTables();
 		bool addNote(const std::string& title, const std::string& content, const std::vector<std::string>& tags, const std::string& creationDate);
+
+		std::optional<Note> getNoteByTitle(const std::string& title);
+
+		std::optional<Note> getRandomNote();
 
 	private:
 		sqlite3* db;

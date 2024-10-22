@@ -25,4 +25,12 @@ namespace Core {
         }
     }
 
+    std::optional<Note> NoteManager::getNoteByTitle(const std::string& title) {
+        return database.getNoteByTitle(title);
+    }
+
+    std::optional<Note> NoteManager::getRandomNote() {
+        return database.getRandomNote();
+    }
+
 }
