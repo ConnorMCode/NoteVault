@@ -18,6 +18,8 @@ namespace Core {
 
         std::optional<Note> getRandomNote();
 
+        std::vector<Note> getAllNotes();
+
     private:
         Database database; // Database object to interact with the SQLite database
     };

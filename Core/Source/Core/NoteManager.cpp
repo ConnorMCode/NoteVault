@@ -17,7 +17,9 @@ namespace Core {
 
     // Add a new note directly to the database
     void NoteManager::addNote(const Note& note) {
-        if (!database.addNote(note.title, note.content, note.tags, note.creationDate)) {
+        std::cout << "Updating Note ID: " << note.id << ", Title: " << note.title << ", Content: " << note.content << std::endl;
+
+        if (!database.addNote(note.id, note.title, note.content, note.tags, note.creationDate)) {
             std::cerr << "Error: Could not add note to the database.\n";
         }
         else {
@@ -31,6 +33,10 @@ namespace Core {
 
     std::optional<Note> NoteManager::getRandomNote() {
         return database.getRandomNote();
+    }
+
+    std::vector<Note> NoteManager::getAllNotes() {
+        return database.getAllNotes();
     }
 
 }
