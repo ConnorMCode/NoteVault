@@ -4,6 +4,7 @@ This is a small local notekeeping application using a project structure inspired
 
 ## README
 -Ensure you either recursive clone or add the ImGui repository to the ThirdParty folder for the program to work properly
+-Setup scripts to initialize project files are located in 'Scripts', these use the Build.lua, Build-App.lua, and Build-Core.lua to setup linking and file access so any added directories should be reflected there.
 
 ## License
 - UNLICENSE for this repository (see `UNLICENSE.txt` for more details)
