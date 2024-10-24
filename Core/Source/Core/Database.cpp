@@ -251,16 +251,24 @@ namespace Core {
     }
 
     std::vector<Note> Database::getAllNotes() {
-        std::vector<Note> notes;
+        std::vector<Core::Note> notes;
 
-        std::string sql = "SELECT ID, Title, Content, CreationDate FROM Notes;";
+        // SQL to retrieve notes along with their associated tags
+        std::string sql = "SELECT n.ID, n.Title, n.Content, n.CreationDate, t.Name "
+            "FROM Notes n "
+            "LEFT JOIN NoteTags nt ON n.ID = nt.NoteID "
+            "LEFT JOIN Tags t ON nt.TagID = t.ID "
+            "ORDER BY n.ID;";
+
         sqlite3_stmt* stmt;
-
         int rc = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr);
         if (rc != SQLITE_OK) {
             std::cerr << "Failed to retrieve notes: " << sqlite3_errmsg(db) << std::endl;
             return notes;  // Return an empty vector on error
         }
+
+        // Vector to hold the tags for the current note
+        std::vector<std::string> tags;
 
         // Loop through the results
         while (sqlite3_step(stmt) == SQLITE_ROW) {
@@ -269,11 +277,26 @@ namespace Core {
             std::string content = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
             std::string creationDate = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
 
-            // Assume tags are not stored in the Notes table but handled separately
-            std::vector<std::string> tags; // You can extend this to fetch tags if needed
+            // Retrieve tag name (could be NULL if no tags)
+            const char* tagName = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
 
-            Note note(id, title, content, tags, creationDate);
-            notes.push_back(note);
+            // Check if we are at the start of a new note
+            if (tags.empty() || notes.back().id != id) {
+                // If it's a new note, create the tags vector
+                tags.clear();  // Clear tags for the new note
+                if (tagName) {
+                    tags.push_back(tagName);  // Add the tag if it exists
+                }
+                // Create and add the new note
+                Core::Note note(id, title, content, tags, creationDate);
+                notes.push_back(note);
+            }
+            else {
+                // If the note already exists, add the tag if it's not already in the list
+                if (tagName && std::find(notes.back().tags.begin(), notes.back().tags.end(), tagName) == notes.back().tags.end()) {
+                    notes.back().tags.push_back(tagName);  // Add the tag to the existing note
+                }
+            }
         }
 
         sqlite3_finalize(stmt);

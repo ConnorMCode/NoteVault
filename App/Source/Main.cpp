@@ -3,6 +3,7 @@
 #include "imgui_impl_win32.h"
 #include "Core/NoteManager.h"
 #include "Core/Note.h"
+#include "NoteWindows.h"
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
@@ -21,10 +22,6 @@ static HGLRC            g_hRC;
 static WGL_WindowData   g_MainWindow;
 static int              g_Width;
 static int              g_Height;
-static char             input_text[1024] = "";   // Input buffer for the text box
-static std::string      submitted_text = "";    // Holds the submitted text
-static char             edit_input_text[1024] = "";  // Input buffer for the editing text box
-static std::string      edit_submitted_text = "";  // Holds the submitted edited text
 
 // Forward declarations of helper functions
 bool CreateDeviceWGL(HWND hWnd, WGL_WindowData* data);
@@ -72,8 +69,6 @@ int main(int, char**)
 {
 
     Core::NoteManager noteManager("notes.db");
-
-    static std::optional<Core::Note> currentRandomNote = noteManager.getRandomNote();
 
     g_Width = 1280;  // Set the width
     g_Height = 800;  // Set the height
@@ -152,122 +147,8 @@ int main(int, char**)
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
-        // Set position and size for the "NoteVault" window, but only on the first frame
-        if (firstFrameVault)
-        {
-            ImVec2 noteVaultPos = ImVec2(50, 50);  // Set starting position for NoteVault window
-            ImVec2 noteVaultSize = ImVec2(500, 400);  // Set size for NoteVault window
-            ImGui::SetNextWindowPos(noteVaultPos);
-            ImGui::SetNextWindowSize(noteVaultSize);
-            firstFrameVault = false;  // Disable setting position after the first frame
-        }
-
-        // Text input window with a submit button
-        ImGui::Begin("NoteVault");
-
-        ImGui::InputText("Enter note", input_text, IM_ARRAYSIZE(input_text));
-
-        if (ImGui::Button("Submit"))
-        {
-            // Copy the input text to submitted_text when the submit button is clicked
-            submitted_text = input_text;
-
-            std::string title = "Untitled";
-            std::vector<std::string> tags;
-            std::string creationDate = "2024-10-22";
-
-            Core::Note newNote(submitted_text, tags, creationDate);
-
-            noteManager.addNote(newNote);
-        }
-
-        if (ImGui::Button("Reroll")) {
-            currentRandomNote = noteManager.getRandomNote();
-        }
-        if (currentRandomNote)
-        {
-            // Display the random note's content if available
-            ImGui::Text("Random Note: %s", currentRandomNote->content.c_str());
-        }
-        else
-        {
-            ImGui::Text("No note available.");
-        }
-
-        if (!submitted_text.empty())
-        {
-            ImGui::Text("You entered: %s", submitted_text.c_str());
-        }
-
-        ImGui::End();
-
-        // Set position and size for the "Note Explorer" window, but only on the first frame
-        if (firstFrameExplorer)
-        {
-            ImVec2 explorerPos = ImVec2(600, 50);  // Set starting position for Note Explorer window
-            ImVec2 explorerSize = ImVec2(500, 400);  // Set size for Note Explorer window
-            ImGui::SetNextWindowPos(explorerPos);
-            ImGui::SetNextWindowSize(explorerSize);
-            firstFrameExplorer = false;  // Disable setting position after the first frame
-        }
-
-        // Display all notes in the "Note Explorer" window
-        std::vector<Core::Note> notes = noteManager.getAllNotes();
-
-        ImGui::Begin("Note Explorer");
-
-        for (auto& note : notes) {
-            // Use PushID to create a unique ID for each note
-            ImGui::PushID(note.id);  // Push the note ID for unique identification
-
-            // Track whether the note is in edit mode
-            static std::unordered_map<int, bool> editModeMap;
-            static std::unordered_map<int, std::string> editBuffers;
-
-            // Ensure every note has a corresponding edit mode status
-            if (editModeMap.find(note.id) == editModeMap.end()) {
-                editModeMap[note.id] = false;  // Start with not in edit mode
-            }
-
-            // Check if the note is in edit mode
-            if (editModeMap[note.id]) {
-
-                if (editBuffers.find(note.id) == editBuffers.end()) {
-                    editBuffers[note.id] = note.content;
-                    std::strncpy(edit_input_text, editBuffers[note.id].c_str(), sizeof(edit_input_text));
-                }
-
-                ImGui::InputTextMultiline("##editContent", edit_input_text, IM_ARRAYSIZE(edit_input_text), ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 6));
-
-                // Display "Submit" button instead of "Edit"
-                if (ImGui::Button("Submit")) {
-                    edit_submitted_text = edit_input_text;
-
-                    note.editContent(edit_submitted_text);  // Update note's content
-
-                    noteManager.addNote(note);  // Update in the database
-
-                    editModeMap[note.id] = false;  // Exit edit mode after submitting
-                    editBuffers.erase(note.id);  // Remove the buffer after submission
-                }
-            }
-            else {
-                // Display the note's content normally when not in edit mode
-                ImGui::Text("%s: %s", std::to_string(note.id).c_str(), note.content.c_str());
-
-                // Show "Edit" button
-                if (ImGui::Button("Edit")) {
-                    editModeMap[note.id] = true;  // Switch to edit mode when clicked
-                }
-            }
-
-            ImGui::Separator();  // Add a separator between notes for clarity
-
-            ImGui::PopID();  // Pop the unique ID for this note
-        }
-
-        ImGui::End();
-
+        RenderNoteVaultWindow(noteManager);
+        RenderNoteExplorerWindow(noteManager);
 
         // Rendering
         ImGui::Render();
